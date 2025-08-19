@@ -9,9 +9,11 @@
   color: white;
   padding: $defaultPadding;
 
+
   &_full {
     flex-direction: row;
     background-color: transparent;
+    
 
     .card__title {
       flex-grow: 0;
@@ -83,4 +85,6 @@
   &__price {
 
   }
+  
 }
+

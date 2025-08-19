@@ -9,6 +9,8 @@
     border: none;
     border-radius: $defaultBorderRadius;
     @include mixins.selectable($secondary, 2px, $primaryLight);
+    align-items: start;
+    text-align: left;
 
     &::after {
       border-radius: 0.8rem;
