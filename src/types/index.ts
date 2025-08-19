@@ -1,3 +1,10 @@
+export interface IAppState {
+    catalog: IProduct[];
+    basket: string[];
+    preview: string | null;
+    order: IOrder | null;
+    loading: boolean;
+}
 
 export interface IProduct {
     id: string;
@@ -8,16 +15,6 @@ export interface IProduct {
     price: number;
 }
 
-
-export interface IAppState {
-    catalog: IProduct[];
-    basket: string[];
-    preview: string | null;
-    order: IOrder | null;
-    loading: boolean;
-}
-
-
 export interface IOrderForm {
     payment: string;
     email: string;
@@ -25,12 +22,10 @@ export interface IOrderForm {
     address: string;
 }
 
-
 export interface IOrder extends IOrderForm {
     items: string[];
     total: number;
 }
-
 
 export interface IOrderResult {
     id: string;

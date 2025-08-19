@@ -1,4 +1,3 @@
-// src/components/Order.ts
 import { Form } from "../common/Form";
 import { IOrderForm } from "../../types";
 import { IEvents } from "../base/events";
