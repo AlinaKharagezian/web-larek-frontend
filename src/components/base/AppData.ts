@@ -5,13 +5,11 @@ import { IAppState, IProduct, IOrder, IOrderForm, FormErrors } from "../../types
 export class AppData extends Model<IAppState> {
     basket: IProduct[] = [];
     catalog: IProduct[];
-    order: IOrder = {
+    order: IOrderForm = {
         email: '',
         phone: '',
         address: '',
-        payment: '',
-        items: [],
-        total: 0
+        payment: ''
     };
     preview: string | null;
     formErrors: FormErrors = {};
@@ -40,8 +38,6 @@ export class AppData extends Model<IAppState> {
             phone: '', 
             address: '', 
             payment: '', 
-            items: [], 
-            total: 0
         };
         this.events.emit('formErrors:change', {}); 
     }
@@ -94,8 +90,4 @@ export class AppData extends Model<IAppState> {
         return Object.keys(errors).length === 0;
     }
 
-    setOrder() {
-        this.order.items = this.basket.map(item => item.id);
-        this.order.total = this.getTotal();
-    }
 }

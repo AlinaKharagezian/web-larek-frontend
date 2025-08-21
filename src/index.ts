@@ -7,7 +7,7 @@ import { Page } from './components/common/Page';
 import { Card } from './components/common/Card';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Modal } from './components/common/Modal';
-import { IOrderForm, IProduct } from './types';
+import { IOrder, IOrderForm, IProduct } from './types';
 import { Basket } from './components/common/Basket';
 import { Order } from './components/common/Order';
 import { Contacts } from './components/common/Contacts';
@@ -29,6 +29,11 @@ const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 const basket = new Basket(cloneTemplate(basketTemplate), events);
 const order = new Order(cloneTemplate(orderTemplate), events);
 const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
+const success = new Success(cloneTemplate(successTemplate), {
+    onClick: () => {
+        modal.close();
+    }
+});
 
 
 events.on('catalog:changed', () => {
@@ -57,9 +62,9 @@ events.on('preview:changed', (item: IProduct) => {
     const card = new Card(cloneTemplate(cardPreviewTemplate), {
         onClick: () => {
             if (isInBasket) {
-                appData.toggleBasketItem(item, false);
+                events.emit('basket:remove', item); 
             } else {
-                appData.toggleBasketItem(item, true);
+                events.emit('basket:add', item); 
             }
             page.counter = appData.basket.length;
             modal.close();
@@ -84,17 +89,19 @@ events.on('basket:add', (item: IProduct) => {
     page.counter = appData.basket.length;
 });
 
-events.on('basket:update', () => {
+
+events.on('basket:remove', (item: IProduct) => {
+    appData.toggleBasketItem(item, false);
     page.counter = appData.basket.length;
     events.emit('basket:open');
 });
+
 
 events.on('basket:open', () => {
     const basketItems = appData.basket.map((item) => {
         const card = new Card(cloneTemplate(cardBasketTemplate), {
             onClick: () => {
-                appData.toggleBasketItem(item, false);
-                events.emit('basket:update');
+                events.emit('basket:remove', item); 
             }
         });
         return card.render({
@@ -105,7 +112,7 @@ events.on('basket:open', () => {
 
     modal.render({
         content: basket.render({
-            items: basketItems,
+            list: basketItems,
             total: appData.getTotal()
         })
     });
@@ -136,18 +143,15 @@ events.on('order:submit', () => {
 });
 
 events.on('contacts:submit', () => {
-    appData.setOrder();
-    api.orderProducts(appData.order)
+    const orderData: IOrder = {
+        ...appData.order,
+        items: appData.basket.map(item => item.id),
+        total: appData.getTotal()
+    };
+    api.orderProducts(orderData)
         .then((result) => {
-            const success = new Success(cloneTemplate(successTemplate), {
-                onClick: () => {
-                    modal.close();
-                    appData.clearBasket();
-                    page.counter = 0;
-                    events.emit('order:success');
-                }
-            });
-
+            appData.clearBasket();
+            page.counter = 0;
             modal.render({
                 content: success.render({
                     total: result.total
@@ -157,7 +161,8 @@ events.on('contacts:submit', () => {
         .catch(err => {
             console.error(err);
         });
-});
+
+    })
 
 
 events.on('formErrors:change', (errors: Partial<IOrderForm>) => {

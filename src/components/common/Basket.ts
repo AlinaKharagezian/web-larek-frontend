@@ -3,7 +3,7 @@ import { createElement, ensureElement } from "../../utils/utils";
 import { EventEmitter } from "../base/events";
 
 interface IBasketView {
-    items: HTMLElement[];
+    list: HTMLElement[];
     total: number;
     selected: string[];
 }
@@ -26,9 +26,9 @@ export class Basket extends Component<IBasketView> {
             });
         }
 
-        this.items = [];
     }
-    set items(items: HTMLElement[]) {
+
+    set list(items: HTMLElement[]) {
         if (items.length) {
             this._list.replaceChildren(...items);
             this.setDisabled(this._button, false);
@@ -39,7 +39,6 @@ export class Basket extends Component<IBasketView> {
             this.setDisabled(this._button, true);
         }
     }
-
 
     set selected(items: string[]) {
         if (items.length) {

@@ -209,7 +209,7 @@ type FormErrors = Partial<Record<keyof IOrderForm, string>>;
 
 `catalog: IProduct[]` - массив товаров корзины.
 
-`order: IOrder` - объект данных для заказа.
+`order: IOrderForm` - объект данных для заказа.
 
 `preview: string | null` - идентификатор товара для превью.
 
@@ -238,7 +238,6 @@ type FormErrors = Partial<Record<keyof IOrderForm, string>>;
 
 `validateContacts(): boolean` - валидирует форму контактов. Возвращает: true/false, т.е нет ошибок/есть ошибки.
 
-`setOrder()` - подготавливает данные заказа (товары и их общую стоимость)
 
 ***
 
@@ -431,7 +430,7 @@ type FormErrors = Partial<Record<keyof IOrderForm, string>>;
 
 ###### Методы класса: 
 
-`set items(items: HTMLElement[])` - обновлет список товаров корзины. Принимает: массив HTML - элементов (товаров).
+`set list(items: HTMLElement[])` - обновлет список товаров корзины. Принимает: массив HTML - элементов (товаров).
 
 `set selected(items: string[])` - управляет состоянием корзины в зависимости от того, есть в ней товары или нет. Принимает: массив Id товаров, находящихся в корзине.
 
